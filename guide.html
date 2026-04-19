@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Copilot Email Setup Guide</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2333;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-dim: #8b949e;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --warn: #d29922;
+    --danger: #f85149;
+    --purple: #bc8cff;
+    --pink: #f778ba;
+    --gradient: linear-gradient(135deg, #58a6ff 0%, #bc8cff 50%, #f778ba 100%);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* ── Header ── */
+  .hero {
+    text-align: center;
+    padding: 3rem 2rem;
+    margin-bottom: 3rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--gradient);
+  }
+  .hero h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero .subtitle {
+    font-size: 1.1rem;
+    color: var(--text-dim);
+    margin-bottom: 1.5rem;
+  }
+  .hero .badge-row {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .badge .icon { font-size: 1rem; }
+
+  /* ── Platform toggle ── */
+  .platform-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .platform-btn {
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .platform-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--surface2);
+  }
+  .platform-btn:hover { border-color: var(--accent); }
+  .win-only, .mac-only { display: none; }
+  body.platform-win .win-only { display: block; }
+  body.platform-mac .mac-only { display: block; }
+  body.platform-win .win-inline { display: inline; }
+  body.platform-mac .mac-inline { display: inline; }
+  .win-inline, .mac-inline { display: none; }
+
+  /* ── Table of Contents ── */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2.5rem;
+  }
+  .toc h2 {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+  }
+  .toc ol {
+    list-style: none;
+    counter-reset: toc;
+    columns: 2;
+    column-gap: 2rem;
+  }
+  .toc li {
+    counter-increment: toc;
+    padding: 0.3rem 0;
+    break-inside: avoid;
+  }
+  .toc li::before {
+    content: counter(toc) ".";
+    color: var(--accent);
+    font-weight: 600;
+    margin-right: 0.5rem;
+  }
+  .toc a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .toc a:hover { color: var(--accent); }
+
+  /* ── Sections ── */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  .section::before {
+    content: attr(data-step);
+    position: absolute;
+    top: -14px;
+    left: 20px;
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 0.2rem 0.75rem;
+    border-radius: 8px;
+    letter-spacing: 0.05em;
+  }
+  .section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    padding-top: 0.5rem;
+  }
+  .section h3 {
+    margin: 1.5rem 0 0.75rem;
+    color: var(--accent);
+  }
+
+  /* ── Info boxes ── */
+  .info-box {
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+    border-left: 4px solid;
+  }
+  .info-box.tip    { background: #0d2818; border-color: var(--accent2); }
+  .info-box.warn   { background: #2a1f00; border-color: var(--warn); }
+  .info-box.danger { background: #2d0000; border-color: var(--danger); }
+  .info-box.info   { background: #0c1e36; border-color: var(--accent); }
+  .info-box .label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.3rem;
+  }
+  .info-box.tip .label    { color: var(--accent2); }
+  .info-box.warn .label   { color: var(--warn); }
+  .info-box.danger .label { color: var(--danger); }
+  .info-box.info .label   { color: var(--accent); }
+
+  /* ── Click steps ── */
+  .steps {
+    list-style: none;
+    counter-reset: steps;
+  }
+  .steps > li {
+    counter-increment: steps;
+    padding: 1rem 0 1rem 3.5rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .steps > li:last-child { border-bottom: none; }
+  .steps > li::before {
+    content: counter(steps);
+    position: absolute;
+    left: 0;
+    top: 1rem;
+    width: 2.2rem;
+    height: 2.2rem;
+    background: var(--surface2);
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--accent);
+  }
+
+  /* ── Click instruction styling ── */
+  .click {
+    display: inline;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.1rem 0.5rem;
+    font-weight: 600;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .click::before {
+    content: '👆 ';
+    font-size: 0.8em;
+  }
+  .menu-path {
+    color: var(--purple);
+    font-weight: 600;
+  }
+  .field-label {
+    color: var(--warn);
+    font-weight: 600;
+  }
+  .type-this {
+    display: inline-block;
+    background: var(--surface2);
+    border: 1px solid var(--accent2);
+    border-radius: 4px;
+    padding: 0.1rem 0.5rem;
+    color: var(--accent2);
+    font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+    font-size: 0.9em;
+  }
+
+  /* ── Code blocks ── */
+  code {
+    font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+    background: var(--surface2);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: var(--pink);
+  }
+  pre {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    color: var(--text);
+  }
+
+  /* ── Prompt examples ── */
+  .prompt {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+    position: relative;
+    cursor: default;
+  }
+  .prompt::before {
+    content: '💬';
+    margin-right: 0.5rem;
+  }
+
+  /* ── Cost box ── */
+  .cost-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  .cost-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    text-align: center;
+  }
+  .cost-card .price {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent2);
+  }
+  .cost-card .clabel {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-top: 0.25rem;
+  }
+  .cost-card .note {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+  }
+
+  /* ── Key combo ── */
+  kbd {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    font-family: inherit;
+    font-size: 0.85em;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: 0 1px 0 var(--border);
+  }
+
+  /* ── Application cards ── */
+  .app-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  .app-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    transition: border-color 0.2s;
+  }
+  .app-card:hover { border-color: var(--accent); }
+  .app-card .app-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .app-card h4 { font-size: 1rem; margin-bottom: 0.35rem; color: var(--accent); }
+  .app-card p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; }
+
+  /* ── Mode cards ── */
+  .mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  .mode-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    text-align: center;
+  }
+  .mode-card h4 { color: var(--accent); margin-bottom: 0.4rem; }
+  .mode-card .mode-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .mode-card p { font-size: 0.82rem; color: var(--text-dim); line-height: 1.4; }
+  .mode-card.recommended { border-color: var(--accent2); }
+  .mode-card.recommended::after {
+    content: '★ Recommended for email';
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--accent2);
+    font-weight: 600;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    body { padding: 1rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .toc ol { columns: 1; }
+    .cost-box, .app-grid { grid-template-columns: 1fr; }
+    .mode-grid { grid-template-columns: 1fr; }
+    .section { padding: 1.5rem 1rem; }
+    .steps > li { padding-left: 3rem; }
+  }
+</style>
+</head>
+<body class="platform-win">
+
+<script>
+function setPlatform(p) {
+  document.body.className = 'platform-' + p;
+  document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.platform-btn.' + p).classList.add('active');
+}
+</script>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- HERO -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="hero">
+  <h1>✨ Copilot Email Setup Guide</h1>
+  <p class="subtitle">Manage your Gmail inbox with AI — powered by Claude Opus 4.6 in VS Code</p>
+  <div class="badge-row">
+    <span class="badge"><span class="icon">🖥️</span> Windows & Mac</span>
+    <span class="badge"><span class="icon">⏱️</span> ~30 min setup</span>
+    <span class="badge"><span class="icon">💰</span> $10/month</span>
+    <span class="badge"><span class="icon">🤖</span> Claude Opus 4.6</span>
+  </div>
+</div>
+
+<!-- Platform Toggle -->
+<div class="platform-toggle">
+  <button class="platform-btn win active" onclick="setPlatform('win')">🪟 Windows</button>
+  <button class="platform-btn mac" onclick="setPlatform('mac')">🍎 Mac</button>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- WHAT YOU'LL GET -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="section" data-step="OVERVIEW">
+  <h2>What You'll Get</h2>
+  <p>After setup, you'll have a powerful AI assistant inside VS Code that can:</p>
+  <ul style="margin: 1rem 0 1rem 1.5rem;">
+    <li>📧 <strong>Read</strong> your Gmail inbox and search for specific emails</li>
+    <li>🏷️ <strong>Organize</strong> messages into labels/folders automatically</li>
+    <li>📁 <strong>Archive</strong> and clean up old messages in bulk</li>
+    <li>✏️ <strong>Draft</strong> replies and new emails in your voice</li>
+    <li>📊 <strong>Summarize</strong> long email threads</li>
+    <li>🔍 <strong>Find</strong> specific information across hundreds of emails</li>
+  </ul>
+  <p>You'll chat with <strong>Claude Opus 4.6</strong> — one of the most capable AI models available — and it will use a Gmail helper script to do all the heavy lifting. You type plain English; it does the rest.</p>
+
+  <div class="info-box info">
+    <div class="label">How it works</div>
+    You type natural language requests in VS Code Chat (e.g., "Show me all unread emails from last week") and Copilot reads your <code>gmail_helper.py</code> file, writes Python code using those functions, and executes it — all within VS Code. <strong>No coding experience needed.</strong>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- WHAT YOU NEED -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="section" data-step="PREREQUISITES">
+  <h2>What You Need Before Starting</h2>
+
+  <ul style="list-style: none; margin: 1rem 0;">
+    <li style="padding: 0.4rem 0;">☐ <span class="win-only" style="display:inline">A <strong>Windows 10 or 11</strong> computer</span><span class="mac-only" style="display:inline">A <strong>Mac</strong> (macOS 12 Monterey or newer)</span></li>
+    <li style="padding: 0.4rem 0;">☐ A <strong>Gmail account</strong> (the inbox you want to organize)</li>
+    <li style="padding: 0.4rem 0;">☐ A <strong>GitHub account</strong> — free to create at <a href="https://github.com/join" style="color:var(--accent);">github.com/join</a></li>
+    <li style="padding: 0.4rem 0;">☐ A <strong>credit or debit card</strong> for the $10/month subscription</li>
+    <li style="padding: 0.4rem 0;">☐ About <strong>30 minutes</strong> of your time</li>
+  </ul>
+
+  <div class="cost-box">
+    <div class="cost-card">
+      <div class="price">$10</div>
+      <div class="clabel">GitHub Copilot Pro / month</div>
+      <div class="note">Gives access to Claude Opus 4.6<br>Cancel anytime</div>
+    </div>
+    <div class="cost-card">
+      <div class="price">$0</div>
+      <div class="clabel">Google Gmail API</div>
+      <div class="note">Free for personal use<br>No credit card needed</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- TABLE OF CONTENTS -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<nav class="toc">
+  <h2>Setup Steps</h2>
+  <ol>
+    <li><a href="#step1">Run the Setup Script</a></li>
+    <li><a href="#step2">Subscribe to GitHub Copilot Pro</a></li>
+    <li><a href="#step3">Create a Google Cloud Project</a></li>
+    <li><a href="#step4">Enable the Gmail API</a></li>
+    <li><a href="#step5">Set Up OAuth Consent Screen</a></li>
+    <li><a href="#step6">Create OAuth Credentials</a></li>
+    <li><a href="#step7">Authenticate Your Gmail</a></li>
+    <li><a href="#step8">Configure VS Code &amp; Copilot</a></li>
+    <li><a href="#step9">Start Managing Your Email</a></li>
+    <li><a href="#modes">Chat Modes: Ask, Edit, Agent</a></li>
+    <li><a href="#other-uses">Other Things Copilot Can Do</a></li>
+    <li><a href="#troubleshooting">Troubleshooting</a></li>
+  </ol>
+</nav>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- STEP 1: Run Setup Script -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="section" id="step1" data-step="STEP 1">
+  <h2>Run the Setup Script</h2>
+  <p>The setup script checks your system and installs what's needed automatically.</p>
+
+  <!-- Windows instructions -->
+  <div class="win-only">
+    <ol class="steps">
+      <li>
+        Open <strong>File Explorer</strong> (the yellow folder icon on your taskbar) and navigate to the folder where you saved these files.
+      </li>
+      <li>
+        Find the file called <code>setup.ps1</code>. <strong>Right-click</strong> on it. In the menu that appears, <span class="click">Run with PowerShell</span>.
+        <div class="info-box warn">
+          <div class="label">If Windows blocks the script</div>
+          If you see a blue "Windows protected your PC" popup, click <span class="click">More info</span>, then <span class="click">Run anyway</span>.<br><br>
+          If that doesn't work, click the <strong>Start menu</strong> (Windows icon, bottom-left), type <span class="type-this">PowerShell</span>, click <strong>Windows PowerShell</strong> to open it, then type:<br>
+          <pre><code>cd "C:\path\to\copilot-email-setup"
+powershell -ExecutionPolicy Bypass -File setup.ps1</code></pre>
+          Replace <code>C:\path\to\</code> with the actual folder path.
+        </div>
+      </li>
+      <li>
+        A blue PowerShell window will appear. The script will check for <strong>Python</strong>. If Python isn't installed, it will open the download page in your browser.
+        <div class="info-box danger">
+          <div class="label">Critical: When installing Python</div>
+          On the Python installer screen, look at the very bottom. There's a checkbox that says:<br>
+          <strong style="font-size: 1.1em;">☐ Add Python to PATH</strong><br><br>
+          <span class="click">Check that box</span> — this is the most important step. Then click <span class="click">Install Now</span> at the top.<br><br>
+          After Python finishes installing, <strong>close the PowerShell window</strong> and run <code>setup.ps1</code> again from the beginning.
+        </div>
+      </li>
+      <li>
+        Next, the script checks for <strong>VS Code</strong>. If it's missing, it opens the download page. Download and install it with all the default options. Then close PowerShell and re-run <code>setup.ps1</code>.
+      </li>
+      <li>
+        If both are installed, the script will automatically install extensions and Python packages. You'll see green checkmarks (✓) for each one. <strong>Just wait</strong> — this takes about 30 seconds.
+      </li>
+      <li>
+        Then the script will start opening browser tabs for Steps 2–7 below. <strong>Follow along!</strong> After each step, come back to the PowerShell window and press any key to continue.
+      </li>
+    </ol>
+  </div>
+
+  <!-- Mac instructions -->
+  <div class="mac-only">
+    <ol class="steps">
+      <li>
+        Open <strong>Finder</strong> (the blue smiley face icon in your Dock) and navigate to the folder where you saved these files.
+      </li>
+      <li>
+        Open <strong>Terminal</strong>: press <kbd>⌘</kbd> + <kbd>Space</kbd> to open Spotlight, type <span class="type-this">Terminal</span>, press <kbd>Enter</kbd>.
+      </li>
+      <li>
+        In Terminal, navigate to the setup folder. Type:<br>
+        <pre><code>cd ~/Downloads/copilot-email-setup</code></pre>
+        (Adjust the path if you saved it somewhere else.)
+      </li>
+      <li>
+        Make the setup script executable and run it:
+        <pre><code>chmod +x setup.sh
+./setup.sh</code></pre>
+      </li>
+      <li>
+        The script will check for <strong>Python 3</strong> and <strong>VS Code</strong>. If either is missing, it will open the download page for you.
+        <div class="info-box info">
+          <div class="label">Python on Mac</div>
+          macOS usually comes with Python 3 pre-installed. If the script says it's missing, it will open the Python download page. Download the macOS installer and double-click to install.
+        </div>
+      </li>
+      <li>
+        Once prerequisites are installed, the script installs extensions and packages automatically, then starts opening browser tabs. Follow along with each step below.
+      </li>
+    </ol>
+  </div>
+
+  <div class="info-box info">
+    <div class="label">What the script installs for you</div>
+    <strong>VS Code Extensions:</strong> GitHub Copilot, GitHub Copilot Chat, Python extension<br>
+    <strong>Python Packages:</strong> google-auth, google-auth-oauthlib, google-api-python-client
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- STEP 2: Copilot Pro -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="section" id="step2" data-step="STEP 2">
+  <h2>Subscribe to GitHub Copilot Pro ($10/month)</h2>
+  <p>This gives you access to Claude Opus 4.6 — the AI that will manage your email.</p>
+
+  <ol class="steps">
+    <li>
+      The setup script opened <a href="https://github.com/settings/copilot" style="color:var(--accent)">github.com/settings/copilot</a> in your browser. If not, click that link now.
+    </li>
+    <li>
+      If you're not signed into GitHub, you'll see a login page. Enter your username and password, then <span class="click">Sign in</span>. If you don't have an account, click <span class="click">Create an account</span> and follow the signup steps.
+    </li>
+    <li>
+      On the Copilot settings page, you'll see subscription options. Look for the one that says <strong>"Copilot Pro"</strong> at <strong>$10/month</strong>.
+      <div class="info-box warn">
+        <div class="label">Which plan to pick</div>
+        <strong>✅ Copilot Pro ($10/month)</strong> — This is the one you want. It includes Claude Opus 4.6.<br>
+        ❌ Copilot Free — Missing the best AI models. Won't work well for email management.<br>
+        ❌ Copilot Business/Enterprise — For companies. Way more expensive.
+      </div>
+    </li>
+    <li>
+      Click <span class="click">Start free trial</span> or <span class="click">Get Copilot Pro</span> (the button text varies).
+    </li>
+    <li>
+      Enter your payment information (credit or debit card). Click <span class="click">Submit</span>.
+    </li>
+    <li>
+      You should see a confirmation page that says you're subscribed. ✅ Done! You can cancel anytime from the same settings page.
+    </li>
+  </ol>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- STEP 3: Google Cloud Project -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="section" id="step3" data-step="STEP 3">
+  <h2>Create a Google Cloud Project</h2>
+  <p>Don't be intimidated — this is just creating a free container for your email access. No billing required.</p>
+
+  <ol class="steps">
+    <li>
+      The setup script opened <a href="https://console.cloud.google.com/projectcreate" style="color:var(--accent)">console.cloud.google.com/projectcreate</a>. If not, click that link.
+    </li>
+    <li>
+      If prompted to sign in, use the <strong>same Google account</strong> as the Gmail inbox you want to manage. Click <span class="click">Next</span>, enter your password, click <span class="click">Next</span> again.
+    </li>
+    <li>
+      You'll see a "New Project" form. In the <span class="field-label">Project name</span> field, type <span class="type-this">Email Helper</span> (or any name you like).
+    </li>
+    <li>
+      Leave <span class="field-label">Organization</span> and <span class="field-label">Location</span> as they are (usually "No organization").
+    </li>
+    <li>
+      Click the blue <span class="click">Create</span> button at the bottom.
+    </li>
+    <li>
+      Wait 5–10 seconds. A notification bell (🔔) at the top-right will show "Create Project: Email Helper" when it's done. You may also see a "Select Project" notification — click <span class="click">Select Project</span> if it appears.
+    </li>
+  </ol>
+
+  <div class="info-box tip">
+    <div class="label">Don't worry about billing</div>
+    Google Cloud may ask about billing for paid services, but the Gmail API is <strong>completely free</strong> for personal use. You won't be charged. If prompted about billing, you can skip it.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- STEP 4: Enable Gmail API -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="section" id="step4" data-step="STEP 4">
+  <h2>Enable the Gmail API</h2>
+
+  <ol class="steps">
+    <li>
+      The setup script opened <a href="https://console.cloud.google.com/apis/library/gmail.googleapis.com" style="color:var(--accent)">the Gmail API page</a>. If not, click that link.
+    </li>
+    <li>
+      <strong>Important:</strong> Check the top-left of the page — next to "Google Cloud" there's a project dropdown. Make sure it says <strong>"Email Helper"</strong> (or whatever you named your project). If it shows a different project, click the dropdown and select your project.
+    </li>
+    <li>
+      You'll see a page titled "Gmail API" with a description. Find the big blue <span class="click">Enable</span> button and click it.
+    </li>
+    <li>
+      Wait a few seconds. The page will refresh and show "Gmail API" with a green "API enabled" status, plus a dashboard. That's it — you're done with this step!
+    </li>
+  </ol>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- STEP 5: OAuth Consent Screen -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="section" id="step5" data-step="STEP 5">
+  <h2>Set Up the OAuth Consent Screen</h2>
+  <p>This tells Google what your app is called and who can use it (just you).</p>
+
+  <ol class="steps">
+    <li>
+      The setup script opened <a href="https://console.cloud.google.com/apis/credentials/consent" style="color:var(--accent)">the consent screen page</a>. If not, click that link.
+    </li>
+    <li>
+      You'll see "OAuth consent screen" with two options: <strong>Internal</strong> and <strong>External</strong>. Select the radio button next to <span class="click">External</span>, then click the blue <span class="click">Create</span> button.
+      <div class="info-box info">
+        <div class="label">Why "External"?</div>
+        "Internal" is only available for Google Workspace (company/school) accounts. Personal Gmail accounts must use "External". Don't worry — you'll add yourself as a test user so only you can access it.
+      </div>
+    </li>
+    <li>
+      <strong>App information page:</strong> Fill in these fields:
+      <ul style="margin: 0.5rem 0 0 1.5rem;">
+        <li><span class="field-label">App name:</span> type <span class="type-this">Email Helper</span></li>
+        <li><span class="field-label">User support email:</span> click the dropdown and select your Gmail address</li>
+        <li>Scroll all the way down to <span class="field-label">Developer contact information</span></li>
+        <li><span class="field-label">Email addresses:</span> type your Gmail address</li>
+      </ul>
+      Leave everything else blank. Click <span class="click">Save and Continue</span> at the bottom.
+    </li>
+    <li>
+      <strong>Scopes page:</strong> Don't change anything here. Just click <span class="click">Save and Continue</span> at the bottom.
+    </li>
+    <li>
+      <strong>Test users page:</strong> This is important!
+      <ul style="margin: 0.5rem 0 0 1.5rem;">
+        <li>Click <span class="click">+ Add Users</span></li>
+        <li>In the text box that appears, type <strong>your Gmail address</strong> (e.g., <code>yourname@gmail.com</code>)</li>
+        <li>Click <span class="click">Add</span></li>
+        <li>You should see your email listed under "Test users"</li>
+      </ul>
+      Click <span class="click">Save and Continue</span>.
+    </li>
+    <li>
+      <strong>Summary page:</strong> Review the info looks right, then click <span class="click">Back to Dashboard</span>. ✅ Done!
+    </li>
+  </ol>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- STEP 6: Create OAuth Credentials -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="section" id="step6" data-step="STEP 6">
+  <h2>Create OAuth Credentials &amp; Download the Key File</h2>
+  <p>This creates the secret key that lets the script access your email. You'll download a small file.</p>
+
+  <ol class="steps">
+    <li>
+      The setup script opened <a href="https://console.cloud.google.com/apis/credentials" style="color:var(--accent)">the Credentials page</a>. If not, click that link.
+    </li>
+    <li>
+      At the top of the page, find the button that says <span class="click">+ CREATE CREDENTIALS</span> and click it. A dropdown menu will appear.
+    </li>
+    <li>
+      In the dropdown, click <span class="click">OAuth client ID</span>.
+    </li>
+    <li>
+      You'll see a form. For <span class="field-label">Application type</span>, click the dropdown and select <span class="click">Desktop app</span>.
+    </li>
+    <li>
+      For <span class="field-label">Name</span>, type <span class="type-this">Email Helper</span> (or leave the default). Click the blue <span class="click">Create</span> button.
+    </li>
+    <li>
+      A popup window appears titled "OAuth client created". You'll see a Client ID and Client Secret. <strong>Don't copy those</strong> — instead, look for the button that says <span class="click">DOWNLOAD JSON</span> and click it.
+      <div class="info-box danger">
+        <div class="label">Critical: Rename and move the file</div>
+        <ol style="margin: 0.5rem 0 0 1rem;">
+          <li>Find the downloaded file in your Downloads folder. It'll have a long name like <code>client_secret_123456.json</code></li>
+          <li><strong>Rename it</strong> to exactly: <span class="type-this">google_credentials.json</span></li>
+          <li><strong>Move it</strong> into the <code>credentials</code> folder inside this setup kit</li>
+        </ol>
+        <span class="win-only" style="display:inline">The setup script will have opened the <code>credentials</code> folder for you in File Explorer — just drag the file in.</span>
+        <span class="mac-only" style="display:inline">In Finder, navigate to the setup kit folder → <code>credentials</code> → drag the renamed file there.</span>
+      </div>
+    </li>
+    <li>
+      Click <span class="click">OK</span> to close the popup.
+    </li>
+  </ol>
+
+  <div class="info-box warn">
+    <div class="label">Keep this file private</div>
+    The <code>google_credentials.json</code> file is like a password. Don't share it, email it, or post it anywhere. It stays on your computer in the <code>credentials</code> folder.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- STEP 7: Authenticate -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="section" id="step7" data-step="STEP 7">
+  <h2>Authenticate Your Gmail Account</h2>
+  <p>This connects the script to your actual Gmail. A browser window will open for you to sign in.</p>
+
+  <ol class="steps">
+    <li>
+      If the setup script is still running, it will do this automatically — just press any key when prompted.
+      <br>Otherwise, open
+      <span class="win-only" style="display:inline"><strong>PowerShell</strong> (Start menu → type "PowerShell" → click it)</span>
+      <span class="mac-only" style="display:inline"><strong>Terminal</strong> (<kbd>⌘</kbd>+<kbd>Space</kbd> → type "Terminal" → press Enter)</span>
+      , navigate to the folder, and run:
+      <pre><code><span class="win-only" style="display:inline">python gmail_auth.py</span><span class="mac-only" style="display:inline">python3 gmail_auth.py</span></code></pre>
+    </li>
+    <li>
+      A browser window will open showing the Google sign-in page. Enter your email address and click <span class="click">Next</span>. Enter your password and click <span class="click">Next</span>.
+    </li>
+    <li>
+      You'll see a warning screen: <strong>"Google hasn't verified this app"</strong>. This is normal and expected.
+      <br>Click <span class="click">Continue</span>. If you don't see "Continue", click <span class="click">Advanced</span> at the bottom-left, then click <span class="click">Go to Email Helper (unsafe)</span>.
+      <div class="info-box info">
+        <div class="label">Why the "unsafe" warning?</div>
+        Google shows this because your "Email Helper" project isn't a published app — it's a personal tool that only you can use. Since you created it yourself, it's completely safe to continue.
+      </div>
+    </li>
+    <li>
+      The next screen asks for permission to access your email. You'll see checkboxes for Gmail access. Click <span class="click">Continue</span> or <span class="click">Allow</span>.
+    </li>
+    <li>
+      The browser will show "The authentication flow has completed." You can close that tab.
+    </li>
+    <li>
+      Go back to your terminal/PowerShell window. You should see:
+      <pre><code>✓ Connected as yourname@gmail.com
+✓ Total messages: 12,345
+✓ Inbox messages: 234
+
+You're all set! Open VS Code and start chatting with Copilot.</code></pre>
+      If you see those green checkmarks, you're authenticated! 🎉
+    </li>
+  </ol>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- STEP 8: Configure VS Code -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="section" id="step8" data-step="STEP 8">
+  <h2>Configure VS Code &amp; Copilot Chat</h2>
+  <p>Almost there! Now let's get VS Code set up to talk to your email.</p>
+
+  <ol class="steps">
+    <li>
+      <strong>Open VS Code.</strong> The setup script may have opened it already.
+      <span class="win-only" style="display:inline">If not, click the <strong>Start menu</strong>, type <span class="type-this">Visual Studio Code</span>, and click it.</span>
+      <span class="mac-only" style="display:inline">If not, open <strong>Finder → Applications → Visual Studio Code</strong> (or press <kbd>⌘</kbd>+<kbd>Space</kbd>, type <span class="type-this">Visual Studio Code</span>, press Enter).</span>
+    </li>
+    <li>
+      <strong>Open the setup kit folder:</strong> In VS Code, click <span class="menu-path">File</span> in the top menu bar → click <span class="click">Open Folder...</span> → navigate to the <code>copilot-email-setup</code> folder → click <span class="click">Select Folder</span>.
+    </li>
+    <li>
+      <strong>Sign in to GitHub:</strong> Look at the <strong>bottom-left corner</strong> of VS Code. You'll see a person icon (👤). Click it → click <span class="click">Sign in to use GitHub Copilot</span>. A browser will open — sign in with the same GitHub account you subscribed to Copilot Pro with. Click <span class="click">Authorize</span> when asked.
+    </li>
+    <li>
+      <strong>Open Copilot Chat:</strong> Press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd> <span class="mac-only" style="display:inline">(or <kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd> on Mac)</span>. A chat panel will open on the right side. You can also click the <strong>Copilot icon</strong> (two overlapping sparkle squares) in the top-right area of VS Code.
+    </li>
+    <li>
+      <strong>Select the AI model:</strong> At the top of the chat panel, you'll see a <strong>model name</strong> (it might say "GPT-4o" or "Claude Sonnet"). Click it — a dropdown will appear. Scroll down and click <span class="click">Claude Opus 4.6</span>.
+      <div class="info-box tip">
+        <div class="label">Model choice</div>
+        <strong>Claude Opus 4.6</strong> is the most capable model — best for complex email management tasks. If you want faster responses for simpler things, <strong>Claude Sonnet 4.6</strong> is a good alternative.
+      </div>
+    </li>
+    <li>
+      <strong>Open the helper file:</strong> In the left sidebar, you'll see your files listed. Click on <span class="click">gmail_helper.py</span> to open it in an editor tab. This lets Copilot see all the email functions it can use.
+    </li>
+  </ol>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- STEP 9: Start Using It -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="section" id="step9" data-step="STEP 9">
+  <h2>Start Managing Your Email! 🎉</h2>
+  <p>You're all set up! Here's how to talk to Copilot about your email.</p>
+
+  <h3>Your Very First Message</h3>
+  <p>Click in the Copilot Chat text box at the bottom of the panel, type this, and press <kbd>Enter</kbd>:</p>
+  <div class="prompt">Read the gmail_helper.py file in my workspace. Then connect to my Gmail and give me an inbox summary.</div>
+  <p style="color:var(--text-dim); font-size:0.9rem;">Copilot will read the file, write some Python code, run it, and show you your inbox stats. You'll see how many messages you have, how many are unread, and the 10 newest emails.</p>
+
+  <h3>Reading &amp; Searching</h3>
+  <div class="prompt">Show me all unread emails from this week</div>
+  <div class="prompt">Find all emails from Amazon in the last 3 months</div>
+  <div class="prompt">Search for any emails about "invoice" or "receipt" and list them</div>
+  <div class="prompt">Read the latest email from [person's name] and summarize it for me</div>
+  <div class="prompt">Show me the full conversation thread about [topic]</div>
+
+  <h3>Organizing</h3>
+  <div class="prompt">Create labels called Finance, Health, and School — then sort my last 50 inbox messages into those categories</div>
+  <div class="prompt">Find all subscription and newsletter emails and archive them</div>
+  <div class="prompt">Label everything from my bank as Finance and archive it</div>
+  <div class="prompt">Show me what's actually important and needs a reply vs. what's just noise</div>
+
+  <h3>Writing &amp; Replying</h3>
+  <div class="prompt">Draft a reply to the latest email from [person] — be polite and confirm I'll attend</div>
+  <div class="prompt">Write a new email to john@example.com about rescheduling our meeting. Keep it short and friendly.</div>
+  <div class="prompt">Show me my drafts so I can review them before sending</div>
+
+  <h3>Bulk Cleanup</h3>
+  <div class="prompt">I want to do a full inbox cleanup. Scan everything, categorize by sender, and let's work through it together by priority.</div>
+  <div class="prompt">Find and archive all promotional emails older than 30 days</div>
+  <div class="prompt">How many emails do I have total? Break it down by category for me.</div>
+
+  <div class="info-box warn">
+    <div class="label">Safety notes</div>
+    • Copilot will <strong>draft</strong> emails for you to review — it won't send anything unless you explicitly tell it to.<br>
+    • <strong>Archiving</strong> removes emails from your inbox but doesn't delete them — they stay in "All Mail" and you can always find them with search.<br>
+    • You can always undo by saying "undo that" or "put those back in my inbox."
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- CHAT MODES -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="section" id="modes" data-step="MODES">
+  <h2>Chat Modes: Ask, Edit, and Agent</h2>
+  <p>Copilot Chat has three modes. The mode selector is at the <strong>top of the chat panel</strong> — look for a dropdown or icons near where you type.</p>
+
+  <div class="mode-grid">
+    <div class="mode-card">
+      <div class="mode-icon">💬</div>
+      <h4>Ask</h4>
+      <p>Answers questions and explains things. Doesn't run code or make changes. Good for "what does this email mean?" type questions.</p>
+    </div>
+    <div class="mode-card">
+      <div class="mode-icon">✏️</div>
+      <h4>Edit</h4>
+      <p>Makes changes to files you have open. Good for tweaking the gmail_helper.py script if you want to customize it.</p>
+    </div>
+    <div class="mode-card recommended">
+      <div class="mode-icon">🤖</div>
+      <h4>Agent</h4>
+      <p>Can read files, write code, <strong>run scripts</strong>, and take actions. This is what you want for email management — it can actually execute the Gmail functions.</p>
+    </div>
+  </div>
+
+  <h3>How to Switch to Agent Mode</h3>
+  <ol class="steps">
+    <li>
+      Look at the <strong>top of the Copilot Chat panel</strong>. You'll see a dropdown selector that might say "Ask" or "Chat" or show an icon.
+    </li>
+    <li>
+      Click it. You'll see the three modes: <strong>Ask</strong>, <strong>Edit</strong>, and <strong>Agent</strong>.
+    </li>
+    <li>
+      Click <span class="click">Agent</span>. The chat panel will update to show the Agent mode.
+    </li>
+  </ol>
+
+  <div class="info-box tip">
+    <div class="label">When to use each mode</div>
+    <strong>Agent mode</strong> — Use this 90% of the time. It can read your emails, run searches, create drafts, archive messages — all the real work.<br>
+    <strong>Ask mode</strong> — Use when you just want an explanation (e.g., "What does 'OAuth consent screen' mean?") without running any code.<br>
+    <strong>Edit mode</strong> — Use if you want to modify the gmail_helper.py file (e.g., add a new function).
+  </div>
+
+  <h3>About Autopilot vs. Manual Approval</h3>
+  <p>In <strong>Agent mode</strong>, Copilot will write code and ask you to approve each action before running it. You'll see a "Run" button or a confirmation prompt.</p>
+  <ul style="margin: 0.75rem 0 0.75rem 1.5rem;">
+    <li><strong>Manual approval (default):</strong> You click <span class="click">Run</span> or <span class="click">Continue</span> for each step. Safer — you see what's happening.</li>
+    <li><strong>Auto-approve ("autopilot"):</strong> Copilot runs each step without asking. Faster for big cleanup jobs. To enable this, look for a <strong>toggle or setting icon</strong> at the top of the chat, or just tell Copilot: "go ahead and run everything without asking me."</li>
+  </ul>
+
+  <div class="info-box info">
+    <div class="label">Recommendation</div>
+    Start with <strong>manual approval</strong> so you can see what Copilot is doing. Once you're comfortable and trust the process, switch to auto-approve for big batch operations like "archive all promotional emails from the last year."
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- OTHER USES -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="section" id="other-uses" data-step="BEYOND EMAIL">
+  <h2>Other Things Copilot Can Help With</h2>
+  <p>Now that you have Copilot Pro set up, you're not limited to email. Here's what else it can do for you right inside VS Code — <strong>no coding needed:</strong></p>
+
+  <div class="app-grid">
+    <div class="app-card">
+      <div class="app-icon">📄</div>
+      <h4>Write &amp; Edit Documents</h4>
+      <p>Draft cover letters, letters of complaint, formal requests, meeting notes. Ask it to rewrite text in a different tone — professional, casual, persuasive.</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon">📊</div>
+      <h4>Work with Spreadsheets</h4>
+      <p>Ask Copilot to read CSV/Excel files, analyze data, find patterns, create summaries, or convert between formats. "What were my top expenses last month?"</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon">🌐</div>
+      <h4>Research &amp; Summarize</h4>
+      <p>Ask questions about any topic. It can search the web, summarize long articles, compare products, explain complex topics in simple terms.</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon">📁</div>
+      <h4>Organize Your Files</h4>
+      <p>Ask it to rename, sort, or organize files on your computer. "Find all PDFs in my Downloads folder and sort them into folders by year."</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon">🧮</div>
+      <h4>Math &amp; Budgeting</h4>
+      <p>Calculate anything — budgets, tax estimates, loan payments, tip splitting. Just describe the problem in plain English.</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon">✍️</div>
+      <h4>Rewrite &amp; Proofread</h4>
+      <p>Paste any text and ask it to fix grammar, improve clarity, make it shorter or longer, translate it, or change the tone.</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon">📅</div>
+      <h4>Plan &amp; Schedule</h4>
+      <p>Create to-do lists, plan events, outline projects. "Help me plan a weekend trip to Vancouver — budget $500, 2 nights."</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon">💻</div>
+      <h4>Computer Help</h4>
+      <p>Troubleshoot computer issues, learn keyboard shortcuts, automate repetitive tasks. "How do I free up space on my hard drive?" or "Make my computer faster."</p>
+    </div>
+  </div>
+
+  <div class="info-box tip">
+    <div class="label">Pro tip: agent mode for everything</div>
+    In <strong>Agent mode</strong>, Copilot can actually <em>do</em> things — not just talk about them. It can create files, run commands, move things around, and execute scripts. Just describe what you want in plain English, and watch it work.
+  </div>
+
+  <h3>Example Everyday Prompts</h3>
+  <div class="prompt">I have a PDF receipt. Read it and tell me how much I spent and what the items were.</div>
+  <div class="prompt">Help me write a formal letter to my landlord about a maintenance issue. The heater hasn't worked for 2 weeks.</div>
+  <div class="prompt">I need to compare two quotes I got — one from CompanyA.pdf and one from CompanyB.pdf. Which is the better deal?</div>
+  <div class="prompt">Create a monthly budget spreadsheet for me. My income is $3,000/month. Include categories for rent, food, transport, and savings.</div>
+  <div class="prompt">Explain what a W-2 form is in simple terms. I just got one from my employer.</div>
+  <div class="prompt">I need to fill out a government form. Walk me through it step by step.</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- TROUBLESHOOTING -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="section" id="troubleshooting" data-step="HELP">
+  <h2>Troubleshooting</h2>
+
+  <details style="margin-bottom: 1rem;">
+    <summary style="cursor: pointer; font-weight: 600; padding: 0.5rem 0; color: var(--accent);">
+      "Python is not recognized" error (Windows)
+    </summary>
+    <div style="padding: 0.5rem 0 0.5rem 1rem;">
+      Python wasn't added to your system PATH during installation.
+      <ol style="margin: 0.5rem 0 0 1rem;">
+        <li>Go to <a href="https://www.python.org/downloads/" style="color:var(--accent)">python.org/downloads</a></li>
+        <li>Download the latest version and run the installer</li>
+        <li>On the very first screen, check <strong>"Add Python to PATH"</strong> at the bottom</li>
+        <li>Click "Install Now"</li>
+        <li>Close and reopen PowerShell, then try again</li>
+      </ol>
+    </div>
+  </details>
+
+  <details style="margin-bottom: 1rem;">
+    <summary style="cursor: pointer; font-weight: 600; padding: 0.5rem 0; color: var(--accent);">
+      "Google hasn't verified this app" scary warning
+    </summary>
+    <div style="padding: 0.5rem 0 0.5rem 1rem;">
+      This is normal and expected. Click <span class="click">Advanced</span> (bottom-left of the warning page), then click <span class="click">Go to Email Helper (unsafe)</span>. It's safe because you created this project yourself — Google just warns about all unverified personal projects.
+    </div>
+  </details>
+
+  <details style="margin-bottom: 1rem;">
+    <summary style="cursor: pointer; font-weight: 600; padding: 0.5rem 0; color: var(--accent);">
+      "Access blocked: Email Helper has not completed the Google verification process"
+    </summary>
+    <div style="padding: 0.5rem 0 0.5rem 1rem;">
+      You forgot to add yourself as a test user.
+      <ol style="margin: 0.5rem 0 0 1rem;">
+        <li>Go to <a href="https://console.cloud.google.com/apis/credentials/consent" style="color:var(--accent)">OAuth Consent Screen</a></li>
+        <li>Click <span class="click">EDIT APP</span> at the top</li>
+        <li>Click <span class="click">Save and Continue</span> through until you reach "Test users"</li>
+        <li>Click <span class="click">+ Add Users</span>, type your Gmail address, click <span class="click">Add</span></li>
+        <li>Click <span class="click">Save and Continue</span>, then try authenticating again</li>
+      </ol>
+    </div>
+  </details>
+
+  <details style="margin-bottom: 1rem;">
+    <summary style="cursor: pointer; font-weight: 600; padding: 0.5rem 0; color: var(--accent);">
+      Copilot doesn't show Claude Opus 4.6 in the model list
+    </summary>
+    <div style="padding: 0.5rem 0 0.5rem 1rem;">
+      <ol style="margin: 0.5rem 0 0 1rem;">
+        <li>Make sure you're subscribed to <strong>Copilot Pro</strong> — check at <a href="https://github.com/settings/copilot" style="color:var(--accent)">github.com/settings/copilot</a></li>
+        <li>Make sure you're signed into GitHub in VS Code — look for your avatar icon in the bottom-left corner of VS Code. If it shows a person icon without your photo, click it and sign in.</li>
+        <li>Try restarting VS Code (close and reopen it)</li>
+        <li>Make sure the Copilot extensions are installed — click the Extensions icon (four squares) on the left sidebar, search for "GitHub Copilot", and make sure it's installed and enabled.</li>
+      </ol>
+    </div>
+  </details>
+
+  <details style="margin-bottom: 1rem;">
+    <summary style="cursor: pointer; font-weight: 600; padding: 0.5rem 0; color: var(--accent);">
+      Copilot says it can't access my email or run scripts
+    </summary>
+    <div style="padding: 0.5rem 0 0.5rem 1rem;">
+      <ol style="margin: 0.5rem 0 0 1rem;">
+        <li>Make sure you're in <strong>Agent mode</strong> (not Ask or Edit). Check the dropdown at the top of the chat panel.</li>
+        <li>Make sure <code>gmail_helper.py</code> is open in a VS Code tab (click on it in the left sidebar)</li>
+        <li>Make sure you opened the <strong>correct folder</strong> in VS Code (File → Open Folder → select the copilot-email-setup folder)</li>
+        <li>Try starting your message with: <em>"Read gmail_helper.py in my workspace and use its functions to..."</em></li>
+      </ol>
+    </div>
+  </details>
+
+  <details style="margin-bottom: 1rem;">
+    <summary style="cursor: pointer; font-weight: 600; padding: 0.5rem 0; color: var(--accent);">
+      Token expired / "invalid_grant" error
+    </summary>
+    <div style="padding: 0.5rem 0 0.5rem 1rem;">
+      Your authentication token has expired. Open
+      <span class="win-only" style="display:inline">PowerShell</span><span class="mac-only" style="display:inline">Terminal</span>
+      , navigate to the setup folder, and run:
+      <pre><code><span class="win-only" style="display:inline">python gmail_auth.py</span><span class="mac-only" style="display:inline">python3 gmail_auth.py</span></code></pre>
+      Sign in again and it'll refresh your token. Tokens last about 7 days if unused.
+    </div>
+  </details>
+
+  <details style="margin-bottom: 1rem;">
+    <summary style="cursor: pointer; font-weight: 600; padding: 0.5rem 0; color: var(--accent);">
+      "pip is not recognized" error
+    </summary>
+    <div style="padding: 0.5rem 0 0.5rem 1rem;">
+      Try using <code>python -m pip install</code> instead of <code>pip install</code>. On Mac, use <code>python3 -m pip install</code>. If that doesn't work, Python's Scripts folder isn't in your PATH — reinstall Python with "Add to PATH" checked.
+    </div>
+  </details>
+
+  <details style="margin-bottom: 1rem;">
+    <summary style="cursor: pointer; font-weight: 600; padding: 0.5rem 0; color: var(--accent);">
+      Setup script won't run on Mac — "Permission denied"
+    </summary>
+    <div style="padding: 0.5rem 0 0.5rem 1rem;">
+      Run this in Terminal first:
+      <pre><code>chmod +x setup.sh</code></pre>
+      Then try <code>./setup.sh</code> again. This gives the script permission to execute.
+    </div>
+  </details>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- FILES REFERENCE -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="section" data-step="REFERENCE">
+  <h2>What's in This Kit</h2>
+
+  <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+    <thead>
+      <tr style="border-bottom: 2px solid var(--border);">
+        <th style="text-align: left; padding: 0.5rem; color: var(--text-dim);">File</th>
+        <th style="text-align: left; padding: 0.5rem; color: var(--text-dim);">What It Does</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 0.5rem;"><code>guide.html</code></td>
+        <td style="padding: 0.5rem;">This instruction guide (you're reading it!)</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 0.5rem;"><code>setup.ps1</code> <span style="color:var(--text-dim); font-size:0.8em;">(Windows)</span></td>
+        <td style="padding: 0.5rem;">Automated setup script for Windows</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 0.5rem;"><code>setup.sh</code> <span style="color:var(--text-dim); font-size:0.8em;">(Mac)</span></td>
+        <td style="padding: 0.5rem;">Automated setup script for Mac</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 0.5rem;"><code>gmail_auth.py</code></td>
+        <td style="padding: 0.5rem;">Connects your Gmail account (run once)</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 0.5rem;"><code>gmail_helper.py</code></td>
+        <td style="padding: 0.5rem;">The email toolkit that Copilot uses to manage your email</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 0.5rem;"><code>credentials/</code></td>
+        <td style="padding: 0.5rem;">Where your Google credentials file goes (keep private!)</td>
+      </tr>
+      <tr>
+        <td style="padding: 0.5rem;"><code>README.md</code></td>
+        <td style="padding: 0.5rem;">Quick-start text version of these instructions</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- FOOTER -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<div class="footer">
+  <p>Made with ❤️ · Powered by GitHub Copilot + Claude Opus 4.6</p>
+  <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+    Questions? Open Copilot Chat in VS Code and ask — it can help troubleshoot too!
+  </p>
+</div>
+
+</body>
+</html>
