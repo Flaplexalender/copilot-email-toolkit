@@ -16,11 +16,12 @@ Works on **Windows** and **Mac**.
 
 ### Both Platforms
 1. **Subscribe** to GitHub Copilot Pro ($10/month) at github.com/settings/copilot
-2. **Set up Google Cloud** — create project, enable Gmail API, create OAuth credentials
-3. **Download credentials** → save as `credentials/google_credentials.json`
-4. **Authenticate** — run `python gmail_auth.py` (or `python3` on Mac)
-5. **Open VS Code** → Copilot Chat (Ctrl+Shift+I / Cmd+Shift+I) → select Claude Opus 4.6
-6. **Start chatting** — "Read gmail_helper.py, then help me organize my inbox"
+2. **Open VS Code** → sign into GitHub → open Copilot Chat (Ctrl+Shift+I / Cmd+Shift+I) → select **Claude Opus 4.6**
+3. **🎉 You now have an AI assistant!** — Copilot can walk you through the remaining Google Cloud / Gmail API steps
+4. **Set up Google Cloud** — create project, enable Gmail API, create OAuth credentials
+5. **Download credentials** → save as `credentials/google_credentials.json`
+6. **Authenticate** — run `python gmail_auth.py` (or `python3` on Mac)
+7. **Start chatting** — "Read gmail_helper.py, then help me organize my inbox"
 
 ## Detailed Guide
 
